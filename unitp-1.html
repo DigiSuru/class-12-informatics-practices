@@ -383,13 +383,21 @@
             switchTab(tabId) {
                 const tabs = ['study', 'sql', 'quiz'];
                 tabs.forEach(t => {
-                    document.getElementById(`section-${t}`).style.display = 'none';
+                    const section = document.getElementById(`section-${t}`);
+                    section.style.display = 'none';
+                    // Explicitly add hidden-content class so it gets tucked away properly
+                    section.classList.add('hidden-content');
+                    
                     const btn = document.getElementById(`tab-${t}`);
                     btn.classList.remove('active-tab');
                     btn.classList.add('inactive-tab');
                 });
                 
-                document.getElementById(`section-${tabId}`).style.display = 'block';
+                const activeSection = document.getElementById(`section-${tabId}`);
+                activeSection.style.display = 'block';
+                // Explicitly remove hidden-content class to overcome the !important rule
+                activeSection.classList.remove('hidden-content');
+
                 const activeBtn = document.getElementById(`tab-${tabId}`);
                 activeBtn.classList.remove('inactive-tab');
                 activeBtn.classList.add('active-tab');
