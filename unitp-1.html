@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database & Networking Study Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Chosen Palette: Warm Neutrals with Teal and Amber Accents -->
+    <!-- Application Structure Plan: The SPA uses a tabbed dashboard structure (Study Guide, SQL Simulator, Practice Quiz). This non-linear design was chosen because studying is inherently non-linear; users need to switch between reviewing theory (Study Guide), practicing application (SQL Simulator), and testing their knowledge (Practice Quiz) seamlessly. The content is broken down from a massive text block into modular, interactive components (reveal cards, simulated terminal, dynamic form) to reduce cognitive load and increase active recall. -->
+    <!-- Visualization & Content Choices: 
+         1. Descriptive Q&A -> Goal: Inform/Memorize -> Method: Click-to-reveal Cards -> Justification: Encourages active recall rather than passive reading. 
+         2. SQL Outputs -> Goal: Demonstrate -> Method: Simulated Terminal Interface -> Justification: Contextualizes the code, making the outputs feel like real database interactions. 
+         3. Test Results -> Goal: Organize/Feedback -> Method: Doughnut Chart (Chart.js) -> Justification: Provides immediate, visual quantitative feedback on user performance. 
+         Library/Method: Chart.js for data visualization, Tailwind for layout. 
+         Confirming NO SVG/Mermaid used. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+        body {
+            background-color: #faf9f6;
+            color: #292524;
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        .chart-container { 
+            position: relative; 
+            width: 100%; 
+            max-width: 400px; 
+            margin-left: auto; 
+            margin-right: auto; 
+            height: 300px; 
+            max-height: 350px; 
+        }
+        @media (min-width: 768px) { 
+            .chart-container { height: 350px; } 
+        }
+        .hidden-content { display: none; }
+        .active-tab {
+            border-bottom-width: 4px;
+            border-color: #0d9488;
+            color: #0d9488;
+            font-weight: 600;
+        }
+        .inactive-tab {
+            border-bottom-width: 4px;
+            border-color: transparent;
+            color: #57534e;
+        }
+        .inactive-tab:hover {
+            color: #0d9488;
+            border-color: #99f6e4;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <header class="bg-white shadow-sm sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center py-4">
+                <div class="flex items-center mb-4 md:mb-0">
+                    <span class="text-3xl mr-3">&#x1F4DA;</span>
+                    <h1 class="text-2xl font-bold text-stone-800 tracking-tight">TechPrep Dashboard</h1>
+                </div>
+                <nav class="flex space-x-2 sm:space-x-8" id="nav-menu">
+                    <button onclick="app.switchTab('study')" id="tab-study" class="active-tab px-1 py-2 text-sm sm:text-base transition-colors duration-200 focus:outline-none">Study Guide</button>
+                    <button onclick="app.switchTab('sql')" id="tab-sql" class="inactive-tab px-1 py-2 text-sm sm:text-base transition-colors duration-200 focus:outline-none">SQL Lab</button>
+                    <button onclick="app.switchTab('quiz')" id="tab-quiz" class="inactive-tab px-1 py-2 text-sm sm:text-base transition-colors duration-200 focus:outline-none">Practice Quiz</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <section id="section-study" class="block animate-fade-in">
+            <div class="mb-8 max-w-3xl">
+                <h2 class="text-3xl font-bold text-stone-800 mb-4">Interactive Study Guide</h2>
+                <p class="text-lg text-stone-600 leading-relaxed">
+                    Welcome to the knowledge base. This section contains the core descriptive definitions and concepts from the source material regarding Relational Database Management Systems (RDBMS) and Computer Networking hardware. Instead of reading a static list, click on any concept card below to reveal its detailed answer, promoting active recall and better retention of the material.
+                </p>
+            </div>
+
+            <div class="mb-6 flex space-x-4 border-b border-stone-200 pb-4">
+                <button onclick="app.filterStudy('all')" id="filter-all" class="px-4 py-2 bg-stone-800 text-white rounded-md text-sm font-medium transition-colors">All Topics</button>
+                <button onclick="app.filterStudy('database')" id="filter-db" class="px-4 py-2 bg-white text-stone-600 border border-stone-300 rounded-md text-sm font-medium hover:bg-stone-50 transition-colors">Databases</button>
+                <button onclick="app.filterStudy('network')" id="filter-net" class="px-4 py-2 bg-white text-stone-600 border border-stone-300 rounded-md text-sm font-medium hover:bg-stone-50 transition-colors">Networking</button>
+            </div>
+
+            <div id="study-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            </div>
+        </section>
+
+        <section id="section-sql" class="hidden-content animate-fade-in">
+            <div class="mb-8 max-w-3xl">
+                <h2 class="text-3xl font-bold text-stone-800 mb-4">SQL Function Simulator</h2>
+                <p class="text-lg text-stone-600 leading-relaxed">
+                    This section demonstrates the practical application of SQL functions detailed in the report. Select a query from the command list on the left to "execute" it. The simulated terminal on the right will display the corresponding output or result set. This interactive layout helps contextualize how single-row functions, aggregate functions, and mathematical operations behave in a real database environment.
+                </p>
+            </div>
+
+            <div class="flex flex-col lg:flex-row gap-8 bg-white p-6 rounded-xl shadow-sm border border-stone-100">
+                <div class="w-full lg:w-1/2">
+                    <h3 class="text-xl font-semibold mb-4 text-stone-800 flex items-center">
+                        <span class="mr-2">&#x1F4BB;</span> Command History
+                    </h3>
+                    <div id="sql-buttons-container" class="space-y-3 max-h-[500px] overflow-y-auto pr-2">
+                    </div>
+                </div>
+
+                <div class="w-full lg:w-1/2 flex flex-col">
+                    <h3 class="text-xl font-semibold mb-4 text-stone-800 flex items-center">
+                        <span class="mr-2">&#x2328;</span> Terminal Output
+                    </h3>
+                    <div class="flex-grow bg-slate-900 rounded-lg p-6 font-mono text-sm sm:text-base shadow-inner relative overflow-hidden min-h-[300px]">
+                        <div class="absolute top-0 left-0 w-full h-8 bg-slate-800 flex items-center px-4 space-x-2">
+                            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                            <span class="text-slate-400 text-xs ml-4">mysql> query_runner</span>
+                        </div>
+                        <div id="sql-terminal-content" class="mt-8 text-slate-300">
+                            <p class="text-slate-500 italic mb-2">-- System initialized. Waiting for query execution...</p>
+                            <p class="text-green-400">Select a command from the left to view results.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-quiz" class="hidden-content animate-fade-in">
+            <div class="mb-8 max-w-3xl">
+                <h2 class="text-3xl font-bold text-stone-800 mb-4">Knowledge Assessment</h2>
+                <p class="text-lg text-stone-600 leading-relaxed">
+                    Test your understanding of the source material. This section transforms the static multiple-choice and fill-in-the-blank questions into a dynamic assessment tool. Answer the questions below and submit your results. The application will instantly calculate your score and generate a performance breakdown chart, helping you identify areas that require further review.
+                </p>
+            </div>
+
+            <div id="quiz-container" class="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-stone-100">
+                <form id="assessment-form" onsubmit="event.preventDefault(); app.gradeQuiz();">
+                    
+                    <div class="mb-8 border-b border-stone-200 pb-4">
+                        <h3 class="text-2xl font-semibold text-teal-700 flex items-center">
+                            <span class="mr-2">&#x2611;</span> Multiple Choice Questions
+                        </h3>
+                    </div>
+                    <div id="mcq-container" class="space-y-8 mb-12">
+                    </div>
+
+                    <div class="mb-8 border-b border-stone-200 pb-4">
+                        <h3 class="text-2xl font-semibold text-teal-700 flex items-center">
+                            <span class="mr-2">&#x270E;</span> Fill in the Blanks
+                        </h3>
+                        <p class="text-sm text-stone-500 mt-1">Type the exact missing word(s) based on the study material.</p>
+                    </div>
+                    <div id="fitb-container" class="space-y-6 mb-12">
+                    </div>
+
+                    <div class="mt-8 pt-6 border-t border-stone-200 flex justify-end">
+                        <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-8 rounded-lg shadow-md transition-all transform hover:scale-105 flex items-center">
+                            Submit Assessment <span class="ml-2">&#x27A1;</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="results-container" class="hidden-content bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-stone-100 mt-8">
+                <h3 class="text-3xl font-bold text-center text-stone-800 mb-2">Assessment Results</h3>
+                <p id="score-display" class="text-xl text-center text-stone-600 mb-8 font-medium"></p>
+                
+                <div class="chart-container">
+                    <canvas id="resultsChart"></canvas>
+                </div>
+
+                <div class="mt-10 text-center">
+                    <button onclick="app.resetQuiz()" class="bg-stone-200 hover:bg-stone-300 text-stone-800 font-semibold py-2 px-6 rounded transition-colors">
+                        &#x21BA; Retake Quiz
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-stone-900 text-stone-400 py-6 text-center text-sm">
+        <p>Interactive Architecture based on Comprehensive Question Bank</p>
+        <p class="mt-1">Database Management & Networking Module</p>
+    </footer>
+
+    <script>
+        const studyData = [
+            {
+                id: 'q1',
+                category: 'database',
+                question: 'Define RDBMS and name any two examples.',
+                answer: 'RDBMS stands for Relational Database Management System. It stores data in a structured format using rows and columns (tables) that can be related using common fields, ensuring data integrity. Examples: MySQL, Oracle, Microsoft SQL Server, PostgreSQL.'
+            },
+            {
+                id: 'q2',
+                category: 'database',
+                question: 'What is the purpose of the ORDER BY and HAVING clauses?',
+                answer: 'ORDER BY: Sorts the result-set retrieved by a SELECT query in ascending (ASC) or descending (DESC) order based on columns.<br><br>HAVING: Used with GROUP BY to filter grouped records. It applies conditions to groups similar to how WHERE applies to individual rows.'
+            },
+            {
+                id: 'q3',
+                category: 'database',
+                question: 'State two differences between Single-row and Aggregate functions.',
+                answer: '1. Operation: Single-row functions operate on one row at a time returning one result per row. Aggregate functions operate on a group of rows returning a single consolidated result.<br>2. Usage: Single-row functions don\'t need GROUP BY. Aggregate functions are mostly used with GROUP BY and HAVING clauses.'
+            },
+            {
+                id: 'q4',
+                category: 'database',
+                question: 'What do you understand by Cartesian Product?',
+                answer: 'A Cartesian Product (or Cross Join) occurs when two tables are joined without a join condition. Every row from the first table is paired with every row from the second table (e.g., Table A (x rows) * Table B (y rows) = x*y rows).'
+            },
+            {
+                id: 'q5',
+                category: 'database',
+                question: 'Name SQL functions for: Day name, Substring, Month name, Uppercase.',
+                answer: 'Day name: DAYNAME()<br>Substring: MID(), SUBSTR(), or SUBSTRING()<br>Month name: MONTHNAME()<br>Uppercase: UPPER() or UCASE()'
+            },
+            {
+                id: 'q6',
+                category: 'network',
+                question: 'Explain the networking hardware: Modem',
+                answer: 'Modulator-Demodulator. Converts digital data into analog signals for transmission over phone/cable lines, and converts incoming analog signals back to digital data.'
+            },
+            {
+                id: 'q7',
+                category: 'network',
+                question: 'Explain the networking hardware: NIC & Repeater',
+                answer: 'NIC (Network Interface Card): Hardware installed in a computer allowing it to physically connect to a network.<br><br>Repeater: An electronic device that receives a weak signal and regenerates it to extend network range.'
+            },
+            {
+                id: 'q8',
+                category: 'network',
+                question: 'Explain the networking hardware: Switch',
+                answer: 'A networking device connecting multiple devices in a LAN. Unlike a hub, it intelligently receives, processes, and forwards data ONLY to the specific destination device.'
+            },
+            {
+                id: 'q9',
+                category: 'network',
+                question: 'Define WWW, ISP, and Web Server.',
+                answer: 'WWW: World Wide Web.<br>ISP: Internet Service Provider.<br>Web Server: Stores, processes, and delivers web pages to clients (users) upon request over the internet.'
+            },
+            {
+                id: 'q10',
+                category: 'network',
+                question: 'What is a Gateway and a Node?',
+                answer: 'Gateway: Connects two dissimilar networks and translates data to understand different protocols.<br>Node: Any active, physical device attached to a network (computer, printer) capable of sending, receiving, or forwarding data.'
+            }
+        ];
+
+        const sqlData = [
+            {
+                id: 'sql1',
+                title: 'Power Function',
+                query: 'SELECT POW(2,3);',
+                output: '+-----------+\n| POW(2,3)  |\n+-----------+\n|         8 |\n+-----------+\n1 row in set (0.00 sec)'
+            },
+            {
+                id: 'sql2',
+                title: 'Rounding Decimals & Tens',
+                query: 'SELECT ROUND(123.2345, 2), ROUND(342.9234, -1);',
+                output: '+-------------------+--------------------+\n| ROUND(123.2345,2) | ROUND(342.9234,-1) |\n+-------------------+--------------------+\n|            123.23 |                340 |\n+-------------------+--------------------+\n1 row in set (0.00 sec)'
+            },
+            {
+                id: 'sql3',
+                title: 'String Length',
+                query: 'SELECT LENGTH("Informatics Practices");',
+                output: '+---------------------------------+\n| LENGTH("Informatics Practices") |\n+---------------------------------+\n|                              21 |\n+---------------------------------+\n1 row in set (0.00 sec)'
+            },
+            {
+                id: 'sql4',
+                title: 'Date Extraction',
+                query: 'SELECT YEAR("1979/11/26"), MONTH("1979/11/26");',
+                output: '+--------------------+---------------------+\n| YEAR("1979/11/26") | MONTH("1979/11/26") |\n+--------------------+---------------------+\n|               1979 |                  11 |\n+--------------------+---------------------+\n1 row in set (0.00 sec)'
+            },
+            {
+                id: 'sql5',
+                title: 'Substring & Mid',
+                query: "SELECT MID('Computer', 3, 4), SUBSTR('Practices', 3);",
+                output: "+-----------------------+-----------------------+\n| MID('Computer', 3, 4) | SUBSTR('Practices', 3)|\n+-----------------------+-----------------------+\n| mput                  | actices               |\n+-----------------------+-----------------------+\n1 row in set (0.00 sec)"
+            },
+            {
+                id: 'sql6',
+                title: 'Day Name Extraction',
+                query: "SELECT DAYNAME('2026-05-08');",
+                output: "+-----------------------+\n| DAYNAME('2026-05-08') |\n+-----------------------+\n| Friday                |\n+-----------------------+\n1 row in set (0.00 sec)"
+            },
+            {
+                id: 'sql7',
+                title: 'Retrieve Complete Table',
+                query: "SELECT * FROM carshowroom;",
+                output: "Executing... Fetching all rows and columns from table 'carshowroom'.\n\n[Result set contains full table data structure]"
+            },
+            {
+                id: 'sql8',
+                title: 'Group By with Having',
+                query: "SELECT CustomerName, COUNT(*) AS NumberOfCarsPurchased\nFROM carshowroom \nGROUP BY CustomerName \nHAVING COUNT(*) > 1;",
+                output: "Executing... Aggregating data...\n\n+--------------+-----------------------+\n| CustomerName | NumberOfCarsPurchased |\n+--------------+-----------------------+\n| John Doe     |                     2 |\n| Acme Corp    |                     5 |\n+--------------+-----------------------+\n2 rows in set (0.01 sec)"
+            }
+        ];
+
+        const mcqData = [
+            {
+                id: 'mcq1',
+                question: 'Which device acts as a modulator that converts digital data into analog signals?',
+                options: ['Switch', 'Hub', 'Modem', 'Repeater'],
+                correctIndex: 2
+            },
+            {
+                id: 'mcq2',
+                question: 'Which networking device extracts the destination address from the data packet and looks it up in a table to see where to send the packet?',
+                options: ['Hub', 'Repeater', 'Switch', 'Gateway'],
+                correctIndex: 2
+            },
+            {
+                id: 'mcq3',
+                question: 'The topology where each communicating device is connected with every other device in the network is:',
+                options: ['Star', 'Ring', 'Bus', 'Mesh'],
+                correctIndex: 3
+            },
+            {
+                id: 'mcq4',
+                question: 'In the URL http://www.ncert.nic.in, what does http represent?',
+                options: ['Domain Name', 'Subdomain', 'Protocol name', 'Server'],
+                correctIndex: 2
+            },
+            {
+                id: 'mcq5',
+                question: 'A web page whose content always remains the same for all users until someone changes its code manually is known as a:',
+                options: ['Static web page', 'Dynamic web page', 'HTML', 'Script'],
+                correctIndex: 0
+            },
+            {
+                id: 'mcq6',
+                question: 'The domain name system (DNS) does the mapping between:',
+                options: ['URL and HTML', 'Domain name and IP address', 'MAC address and IP address', 'Client and Server'],
+                correctIndex: 1
+            }
+        ];
+
+        const fitbData = [
+            {
+                id: 'fitb1',
+                question: 'A _________ is an interconnection among two or more computers to share data and resources.',
+                answer: 'network'
+            },
+            {
+                id: 'fitb2',
+                question: 'Every Ethernet card has a _________ address, which uniquely identifies the computer on the network.',
+                answer: 'mac'
+            },
+            {
+                id: 'fitb3',
+                question: 'In _________ topology, each node is connected to exactly two other devices, forming a closed loop.',
+                answer: 'ring'
+            },
+            {
+                id: 'fitb4',
+                question: 'Uniform Resource _________ provides the location and mechanism to access a resource on the web.',
+                answer: 'locator'
+            },
+            {
+                id: 'fitb5',
+                question: 'The physical arrangement of computers and peripherals in a network is called its _________.',
+                answer: 'topology'
+            }
+        ];
+
+        const app = {
+            chartInstance: null,
+
+            init() {
+                this.renderStudyCards('all');
+                this.renderSQLButtons();
+                this.renderQuiz();
+            },
+
+            switchTab(tabId) {
+                const tabs = ['study', 'sql', 'quiz'];
+                tabs.forEach(t => {
+                    document.getElementById(`section-${t}`).style.display = 'none';
+                    const btn = document.getElementById(`tab-${t}`);
+                    btn.classList.remove('active-tab');
+                    btn.classList.add('inactive-tab');
+                });
+                
+                document.getElementById(`section-${tabId}`).style.display = 'block';
+                const activeBtn = document.getElementById(`tab-${tabId}`);
+                activeBtn.classList.remove('inactive-tab');
+                activeBtn.classList.add('active-tab');
+            },
+
+            renderStudyCards(filterCategory) {
+                const container = document.getElementById('study-cards-container');
+                container.innerHTML = '';
+                
+                ['all', 'db', 'net'].forEach(id => {
+                    document.getElementById(`filter-${id}`).classList.replace('bg-stone-800', 'bg-white');
+                    document.getElementById(`filter-${id}`).classList.replace('text-white', 'text-stone-600');
+                });
+                
+                let activeFilterBtn = 'filter-all';
+                if(filterCategory === 'database') activeFilterBtn = 'filter-db';
+                if(filterCategory === 'network') activeFilterBtn = 'filter-net';
+                
+                document.getElementById(activeFilterBtn).classList.replace('bg-white', 'bg-stone-800');
+                document.getElementById(activeFilterBtn).classList.replace('text-stone-600', 'text-white');
+
+                const filteredData = filterCategory === 'all' 
+                    ? studyData 
+                    : studyData.filter(item => item.category === filterCategory);
+
+                filteredData.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-white rounded-xl shadow-sm border border-stone-200 p-6 flex flex-col justify-between hover:shadow-md transition-shadow relative overflow-hidden group cursor-pointer';
+                    card.onclick = () => this.toggleCard(item.id);
+                    
+                    const badgeColor = item.category === 'database' ? 'bg-orange-100 text-orange-800' : 'bg-teal-100 text-teal-800';
+                    const badgeText = item.category === 'database' ? 'SQL & DB' : 'Networking';
+
+                    card.innerHTML = `
+                        <div>
+                            <span class="inline-block px-2 py-1 rounded text-xs font-semibold mb-3 ${badgeColor}">${badgeText}</span>
+                            <h4 class="text-lg font-bold text-stone-800 mb-2 leading-snug">${item.question}</h4>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-stone-100 text-sm text-stone-500 font-medium flex items-center justify-between">
+                            <span>Click to reveal answer</span>
+                            <span id="icon-${item.id}" class="text-xl">&#x2295;</span>
+                        </div>
+                        <div id="answer-${item.id}" class="hidden-content absolute inset-0 bg-stone-800 text-white p-6 flex flex-col overflow-y-auto">
+                            <div class="flex justify-between items-start mb-4 border-b border-stone-600 pb-2">
+                                <span class="text-xs text-stone-300 uppercase tracking-wider font-bold">Answer</span>
+                                <span class="text-stone-400 text-sm">&#x2715; Close</span>
+                            </div>
+                            <p class="text-base leading-relaxed">${item.answer}</p>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            },
+
+            filterStudy(category) {
+                this.renderStudyCards(category);
+            },
+
+            toggleCard(id) {
+                const answerDiv = document.getElementById(`answer-${id}`);
+                if(answerDiv.classList.contains('hidden-content')) {
+                    answerDiv.classList.remove('hidden-content');
+                } else {
+                    answerDiv.classList.add('hidden-content');
+                }
+            },
+
+            renderSQLButtons() {
+                const container = document.getElementById('sql-buttons-container');
+                sqlData.forEach(item => {
+                    const btn = document.createElement('button');
+                    btn.className = 'w-full text-left p-4 rounded-lg border border-stone-200 hover:border-teal-500 hover:bg-teal-50 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 mb-3 bg-white group';
+                    btn.onclick = () => this.executeSQL(item.id);
+                    btn.innerHTML = `
+                        <div class="font-bold text-stone-800 group-hover:text-teal-700">${item.title}</div>
+                        <div class="text-sm font-mono text-stone-500 mt-1 truncate">${item.query}</div>
+                    `;
+                    container.appendChild(btn);
+                });
+            },
+
+            executeSQL(id) {
+                const sqlObj = sqlData.find(item => item.id === id);
+                const terminal = document.getElementById('sql-terminal-content');
+                
+                terminal.innerHTML = `
+                    <p class="text-blue-400 font-bold mb-2">mysql> <span class="text-stone-100 font-normal">${sqlObj.query}</span></p>
+                    <pre class="text-green-400 whitespace-pre-wrap">${sqlObj.output}</pre>
+                `;
+            },
+
+            renderQuiz() {
+                const mcqContainer = document.getElementById('mcq-container');
+                mcqData.forEach((q, index) => {
+                    const qDiv = document.createElement('div');
+                    qDiv.className = 'bg-stone-50 p-5 rounded-lg border border-stone-200';
+                    let optionsHtml = q.options.map((opt, i) => `
+                        <label class="flex items-center space-x-3 p-3 rounded hover:bg-white border border-transparent hover:border-stone-300 cursor-pointer transition-colors">
+                            <input type="radio" name="${q.id}" value="${i}" class="form-radio h-5 w-5 text-teal-600 focus:ring-teal-500" required>
+                            <span class="text-stone-700">${opt}</span>
+                        </label>
+                    `).join('');
+                    
+                    qDiv.innerHTML = `
+                        <p class="font-bold text-lg text-stone-800 mb-4"><span class="text-teal-600 mr-2">${index + 1}.</span>${q.question}</p>
+                        <div class="space-y-2 pl-6">
+                            ${optionsHtml}
+                        </div>
+                    `;
+                    mcqContainer.appendChild(qDiv);
+                });
+
+                const fitbContainer = document.getElementById('fitb-container');
+                fitbData.forEach((q, index) => {
+                    const qDiv = document.createElement('div');
+                    qDiv.className = 'bg-stone-50 p-5 rounded-lg border border-stone-200';
+                    const qTextHtml = q.question.replace('_________', `<input type="text" name="${q.id}" class="border-b-2 border-stone-400 bg-transparent px-2 py-1 text-teal-700 font-bold focus:outline-none focus:border-teal-600 w-32 md:w-48 text-center mx-1" autocomplete="off" required>`);
+                    
+                    qDiv.innerHTML = `
+                        <p class="font-medium text-lg text-stone-800 leading-relaxed"><span class="text-teal-600 font-bold mr-2">${index + 1}.</span>${qTextHtml}</p>
+                    `;
+                    fitbContainer.appendChild(qDiv);
+                });
+            },
+
+            gradeQuiz() {
+                let score = 0;
+                let totalQuestions = mcqData.length + fitbData.length;
+                const form = document.getElementById('assessment-form');
+                const formData = new FormData(form);
+
+                mcqData.forEach(q => {
+                    if (parseInt(formData.get(q.id)) === q.correctIndex) {
+                        score++;
+                    }
+                });
+
+                fitbData.forEach(q => {
+                    const userAnswer = (formData.get(q.id) || '').trim().toLowerCase();
+                    if (userAnswer === q.answer.toLowerCase() || 
+                        (q.answer === 'router' && userAnswer === 'gateway') || 
+                        (q.answer === 'network' && userAnswer === 'lan')) { 
+                        score++;
+                    }
+                });
+
+                form.style.display = 'none';
+                const resultsDiv = document.getElementById('results-container');
+                resultsDiv.style.display = 'block';
+                resultsDiv.classList.remove('hidden-content');
+
+                const percentage = Math.round((score / totalQuestions) * 100);
+                document.getElementById('score-display').innerHTML = `You scored <span class="font-bold text-3xl text-teal-700">${score}</span> out of ${totalQuestions} (${percentage}%)`;
+
+                this.renderChart(score, totalQuestions - score);
+            },
+
+            renderChart(correct, incorrect) {
+                const ctx = document.getElementById('resultsChart').getContext('2d');
+                
+                if (this.chartInstance) {
+                    this.chartInstance.destroy();
+                }
+
+                this.chartInstance = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Correct Answers', 'Incorrect Answers'],
+                        datasets: [{
+                            data: [correct, incorrect],
+                            backgroundColor: [
+                                '#0d9488', 
+                                '#f87171'  
+                            ],
+                            borderWidth: 0,
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    font: {
+                                        family: 'system-ui',
+                                        size: 14
+                                    },
+                                    color: '#444'
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed !== null) {
+                                            label += context.parsed;
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
+                        cutout: '70%'
+                    }
+                });
+            },
+
+            resetQuiz() {
+                document.getElementById('assessment-form').reset();
+                document.getElementById('assessment-form').style.display = 'block';
+                const resultsDiv = document.getElementById('results-container');
+                resultsDiv.style.display = 'none';
+                resultsDiv.classList.add('hidden-content');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            app.init();
+        });
+    </script>
+</body>
+</html>
