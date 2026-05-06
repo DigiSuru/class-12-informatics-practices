@@ -20,6 +20,7 @@
                             100: '#e0e7ff',
                             500: '#6366f1',
                             600: '#4f46e5',
+                            800: '#3730a3',
                             900: '#312e81',
                         }
                     }
@@ -46,6 +47,11 @@
             background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
             background-size: 20px 20px;
         }
+
+        /* Custom Scrollbar for download lists */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #4f46e5; border-radius: 10px; }
     </style>
 </head>
 <body class="antialiased selection:bg-brand-500 selection:text-white">
@@ -59,6 +65,7 @@
             </a>
             <div class="hidden md:flex gap-8 font-semibold text-sm text-slate-600">
                 <a href="#chapters" class="hover:text-brand-600 transition-colors">Chapters</a>
+                <a href="#downloads" class="hover:text-brand-600 transition-colors">Downloads</a>
                 <a href="#resources" class="hover:text-brand-600 transition-colors">Syllabus & PYQs</a>
                 <a href="#about" class="hover:text-brand-600 transition-colors">About</a>
             </div>
@@ -79,14 +86,14 @@
                 <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-indigo-400">Informatics Practices</span>
             </h1>
             <p class="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed">
-                Your ultimate destination for interactive notes, practical codes, and exam-oriented revision material. Say goodbye to boring textbooks!
+                Your ultimate destination for interactive notes, practical codes, and downloadable exam-oriented revision material. Say goodbye to boring textbooks!
             </p>
             <div class="flex flex-col sm:flex-row justify-center gap-4">
                 <a href="#chapters" class="px-8 py-4 rounded-xl bg-brand-600 text-white font-bold text-lg hover:bg-brand-700 transition-colors shadow-lg shadow-brand-500/30">
                     Explore Chapters
                 </a>
-                <a href="#resources" class="px-8 py-4 rounded-xl bg-white border-2 border-slate-200 text-slate-700 font-bold text-lg hover:border-slate-300 hover:bg-slate-50 transition-colors">
-                    View Syllabus
+                <a href="#downloads" class="px-8 py-4 rounded-xl bg-white border-2 border-slate-200 text-slate-700 font-bold text-lg hover:border-slate-300 hover:bg-slate-50 transition-colors">
+                    Get Free PDFs
                 </a>
             </div>
         </div>
@@ -102,7 +109,6 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 
-                <!-- Chapter 1 (Placeholder) -->
                 <div class="chapter-card bg-white rounded-2xl p-6 border-2 border-slate-100 relative overflow-hidden group">
                     <div class="text-5xl mb-4 opacity-80 group-hover:scale-110 transition-transform">🐼</div>
                     <h3 class="text-xl font-bold mb-2 text-slate-800">1. Data Handling using Pandas</h3>
@@ -113,7 +119,6 @@
                     </div>
                 </div>
 
-                <!-- Chapter 2 (Placeholder) -->
                 <div class="chapter-card bg-white rounded-2xl p-6 border-2 border-slate-100 relative overflow-hidden group">
                     <div class="text-5xl mb-4 opacity-80 group-hover:scale-110 transition-transform">🗄️</div>
                     <h3 class="text-xl font-bold mb-2 text-slate-800">2. Database Query using SQL</h3>
@@ -124,9 +129,8 @@
                     </div>
                 </div>
 
-                <!-- Chapter 5 (The actual working link!) -->
-                <!-- Change href="chapter5.html" to whatever you name your notes file -->
-                <a href="notes/chapter-05-Internet-Web/chapter-5.html" class="chapter-card bg-brand-50 rounded-2xl p-6 border-2 border-brand-200 relative overflow-hidden group block cursor-pointer shadow-sm">
+                <!-- Chapter 5 Interactive Notes Link -->
+                <a href="chapter5.html" class="chapter-card bg-brand-50 rounded-2xl p-6 border-2 border-brand-200 relative overflow-hidden group block cursor-pointer shadow-sm">
                     <div class="absolute top-0 right-0 w-24 h-24 bg-brand-200 rounded-full blur-2xl -mr-10 -mt-10 opacity-50"></div>
                     <div class="text-5xl mb-4 opacity-100 group-hover:scale-110 transition-transform">🌐</div>
                     <h3 class="text-xl font-bold mb-2 text-brand-900">5. Internet and Web</h3>
@@ -137,7 +141,6 @@
                     </div>
                 </a>
 
-                <!-- Chapter 6 (Placeholder) -->
                 <div class="chapter-card bg-white rounded-2xl p-6 border-2 border-slate-100 relative overflow-hidden group">
                     <div class="text-5xl mb-4 opacity-80 group-hover:scale-110 transition-transform">⚖️</div>
                     <h3 class="text-xl font-bold mb-2 text-slate-800">6. Societal Impacts</h3>
@@ -148,7 +151,6 @@
                     </div>
                 </div>
 
-                <!-- Practical Section (Placeholder) -->
                 <div class="chapter-card bg-slate-800 rounded-2xl p-6 border-2 border-slate-700 relative overflow-hidden group">
                     <div class="text-5xl mb-4 opacity-100 group-hover:scale-110 transition-transform">👨‍💻</div>
                     <h3 class="text-xl font-bold mb-2 text-white">Practical Record File</h3>
@@ -163,14 +165,133 @@
         </div>
     </section>
 
+    <!-- NEW SECTION: Downloads & Exam Prep -->
+    <section id="downloads" class="py-20 px-4 sm:px-6 lg:px-8 bg-brand-900 text-white relative overflow-hidden">
+        <!-- Decorative background blobs -->
+        <div class="absolute top-0 left-0 w-64 h-64 bg-brand-800 rounded-full blur-3xl opacity-50 -translate-x-1/2 -translate-y-1/2"></div>
+        <div class="absolute bottom-0 right-0 w-80 h-80 bg-brand-600 rounded-full blur-3xl opacity-20 translate-x-1/3 translate-y-1/3"></div>
+
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">Exam Prep & <span class="text-brand-400">Downloads</span></h2>
+                <p class="text-brand-200 text-lg max-w-2xl mx-auto">Boost your offline preparation. Download chapter-wise unit practices, mock exams, and assignment worksheets directly to your device.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- Unit Practices Card -->
+                <div class="bg-brand-800/60 backdrop-blur-md border border-brand-700/50 p-6 rounded-2xl shadow-xl flex flex-col h-96">
+                    <div class="flex items-center gap-3 mb-6 pb-4 border-b border-brand-700">
+                        <span class="text-3xl">📝</span>
+                        <h3 class="text-xl font-bold">Unit Practices</h3>
+                    </div>
+                    <ul class="space-y-3 overflow-y-auto custom-scroll pr-2 flex-grow">
+                        <li class="flex justify-between items-center bg-brand-900/50 p-3 rounded-lg hover:bg-brand-700 transition-colors group">
+                            <div>
+                                <p class="font-semibold text-brand-50 text-sm">Unit 1: Pandas Revision</p>
+                                <p class="text-xs text-brand-400 mt-0.5">PDF • 1.2 MB</p>
+                            </div>
+                            <a href="#" download class="p-2 rounded-full bg-brand-600 group-hover:bg-brand-500 transition-colors text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                            </a>
+                        </li>
+                        <li class="flex justify-between items-center bg-brand-900/50 p-3 rounded-lg hover:bg-brand-700 transition-colors group">
+                            <div>
+                                <p class="font-semibold text-brand-50 text-sm">Unit 2: SQL Commands Test</p>
+                                <p class="text-xs text-brand-400 mt-0.5">PDF • 850 KB</p>
+                            </div>
+                            <a href="#" download class="p-2 rounded-full bg-brand-600 group-hover:bg-brand-500 transition-colors text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                            </a>
+                        </li>
+                        <li class="flex justify-between items-center bg-brand-900/50 p-3 rounded-lg hover:bg-brand-700 transition-colors group">
+                            <div>
+                                <p class="font-semibold text-brand-50 text-sm">Unit 5: Internet & Web MCQ</p>
+                                <p class="text-xs text-brand-400 mt-0.5">PDF • 500 KB</p>
+                            </div>
+                            <a href="#" download class="p-2 rounded-full bg-brand-600 group-hover:bg-brand-500 transition-colors text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Exams Card -->
+                <div class="bg-brand-800/60 backdrop-blur-md border border-brand-700/50 p-6 rounded-2xl shadow-xl flex flex-col h-96">
+                    <div class="flex items-center gap-3 mb-6 pb-4 border-b border-brand-700">
+                        <span class="text-3xl">🎓</span>
+                        <h3 class="text-xl font-bold">Exams & Pre-Boards</h3>
+                    </div>
+                    <ul class="space-y-3 overflow-y-auto custom-scroll pr-2 flex-grow">
+                        <li class="flex justify-between items-center bg-brand-900/50 p-3 rounded-lg hover:bg-brand-700 transition-colors group">
+                            <div>
+                                <p class="font-semibold text-brand-50 text-sm">Half-Yearly Exam Paper</p>
+                                <p class="text-xs text-brand-400 mt-0.5">PDF • 2.1 MB</p>
+                            </div>
+                            <a href="#" download class="p-2 rounded-full bg-brand-600 group-hover:bg-brand-500 transition-colors text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                            </a>
+                        </li>
+                        <li class="flex justify-between items-center bg-brand-900/50 p-3 rounded-lg hover:bg-brand-700 transition-colors group">
+                            <div>
+                                <p class="font-semibold text-brand-50 text-sm">Pre-Board Mock Test 1</p>
+                                <p class="text-xs text-brand-400 mt-0.5">PDF • 1.8 MB</p>
+                            </div>
+                            <a href="#" download class="p-2 rounded-full bg-brand-600 group-hover:bg-brand-500 transition-colors text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                            </a>
+                        </li>
+                        <li class="flex justify-between items-center bg-brand-900/50 p-3 rounded-lg hover:bg-brand-700 transition-colors group">
+                            <div>
+                                <p class="font-semibold text-brand-50 text-sm">Pre-Board Mock Test 2</p>
+                                <p class="text-xs text-brand-400 mt-0.5">PDF • 1.9 MB</p>
+                            </div>
+                            <a href="#" download class="p-2 rounded-full bg-brand-600 group-hover:bg-brand-500 transition-colors text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Assignments Card -->
+                <div class="bg-brand-800/60 backdrop-blur-md border border-brand-700/50 p-6 rounded-2xl shadow-xl flex flex-col h-96">
+                    <div class="flex items-center gap-3 mb-6 pb-4 border-b border-brand-700">
+                        <span class="text-3xl">📁</span>
+                        <h3 class="text-xl font-bold">Extra Assignments</h3>
+                    </div>
+                    <ul class="space-y-3 overflow-y-auto custom-scroll pr-2 flex-grow">
+                        <li class="flex justify-between items-center bg-brand-900/50 p-3 rounded-lg hover:bg-brand-700 transition-colors group">
+                            <div>
+                                <p class="font-semibold text-brand-50 text-sm">Top 50 SQL Queries</p>
+                                <p class="text-xs text-brand-400 mt-0.5">PDF • 900 KB</p>
+                            </div>
+                            <a href="#" download class="p-2 rounded-full bg-brand-600 group-hover:bg-brand-500 transition-colors text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                            </a>
+                        </li>
+                        <li class="flex justify-between items-center bg-brand-900/50 p-3 rounded-lg hover:bg-brand-700 transition-colors group">
+                            <div>
+                                <p class="font-semibold text-brand-50 text-sm">Pandas Output Questions</p>
+                                <p class="text-xs text-brand-400 mt-0.5">PDF • 1.1 MB</p>
+                            </div>
+                            <a href="#" download class="p-2 rounded-full bg-brand-600 group-hover:bg-brand-500 transition-colors text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Resources Section -->
     <section id="resources" class="py-20 px-4 sm:px-6 lg:px-8 bg-slate-50 border-t border-slate-200">
         <div class="max-w-5xl mx-auto">
             <div class="flex flex-col md:flex-row gap-12 items-center">
                 <div class="flex-1">
-                    <h2 class="text-3xl font-bold mb-6 text-slate-900">Exam Resources & PYQs</h2>
+                    <h2 class="text-3xl font-bold mb-6 text-slate-900">Official Board Resources</h2>
                     <p class="text-slate-600 mb-6 leading-relaxed">
-                        Don't just study hard; study smart. Access the official syllabus breakdown, marking schemes, and previous year board questions categorized by chapter.
+                        Don't just study hard; study smart. Access the official syllabus breakdown, marking schemes, and previous year board questions.
                     </p>
                     <ul class="space-y-4 mb-8">
                         <li class="flex items-center gap-3 text-slate-700">
@@ -186,20 +307,20 @@
                 </div>
                 <div class="flex-1 w-full">
                     <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-100">
-                        <h3 class="font-bold text-lg mb-4 text-slate-800 border-b pb-2">Quick Downloads</h3>
+                        <h3 class="font-bold text-lg mb-4 text-slate-800 border-b pb-2">Quick Links</h3>
                         <div class="space-y-3">
-                            <button class="w-full text-left p-3 rounded-lg hover:bg-slate-50 border border-slate-100 flex justify-between items-center transition-colors">
+                            <a href="#" class="w-full text-left p-3 rounded-lg hover:bg-slate-50 border border-slate-100 flex justify-between items-center transition-colors">
                                 <span class="font-semibold text-slate-700">📄 Official Syllabus (2026-27)</span>
-                                <span class="text-brand-600 text-xl">↓</span>
-                            </button>
-                            <button class="w-full text-left p-3 rounded-lg hover:bg-slate-50 border border-slate-100 flex justify-between items-center transition-colors">
+                                <span class="text-brand-600 text-xl">↗</span>
+                            </a>
+                            <a href="#" class="w-full text-left p-3 rounded-lg hover:bg-slate-50 border border-slate-100 flex justify-between items-center transition-colors">
                                 <span class="font-semibold text-slate-700">📝 CBSE Sample Paper</span>
-                                <span class="text-brand-600 text-xl">↓</span>
-                            </button>
-                            <button class="w-full text-left p-3 rounded-lg hover:bg-slate-50 border border-slate-100 flex justify-between items-center transition-colors">
+                                <span class="text-brand-600 text-xl">↗</span>
+                            </a>
+                            <a href="#" class="w-full text-left p-3 rounded-lg hover:bg-slate-50 border border-slate-100 flex justify-between items-center transition-colors">
                                 <span class="font-semibold text-slate-700">📊 Marking Scheme</span>
-                                <span class="text-brand-600 text-xl">↓</span>
-                            </button>
+                                <span class="text-brand-600 text-xl">↗</span>
+                            </a>
                         </div>
                     </div>
                 </div>
