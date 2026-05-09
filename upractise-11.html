@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computer System - Interactive Practice</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Custom scrollbar and animations */
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        input:focus { outline: none; }
+    </style>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-800 font-sans pb-12">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 py-6">
+            <h1 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
+                <span class="bg-blue-600 text-white p-2 rounded-lg flex items-center justify-center">
+                    <i data-lucide="book-open"></i>
+                </span>
+                Computer System Interactive Practice
+            </h1>
+            <p class="text-slate-500 mt-2 font-medium">Class XI - Informatics Practices • Total 100 Questions</p>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 mt-8">
+        <!-- Navigation Tabs -->
+        <div class="flex space-x-2 bg-gray-200/50 p-1 rounded-xl mb-8 overflow-x-auto" id="tabs-container">
+            <!-- Rendered via JS -->
+        </div>
+
+        <!-- Content Area -->
+        <div id="content-area" class="fade-in duration-300">
+            <!-- Content rendered via JS -->
+        </div>
+    </main>
+
+    <script>
+        // --- DATA: ALL 100 QUESTIONS ---
+        const questionsData = {
+            mcqs: [
+                { id: 1, q: "Which of the following is considered the 'brain' of the computer?", options: ["Arithmetic Logic Unit", "Control Unit", "Central Processing Unit (CPU)", "Random Access Memory (RAM)"], answer: 2 },
+                { id: 2, q: "A 4-bit word is known as a:", options: ["Byte", "Nibble", "Kilobyte", "Word"], answer: 1 },
+                { id: 3, q: "Which of the following is a volatile memory?", options: ["ROM", "Hard Disk", "RAM", "Flash Drive"], answer: 2 },
+                { id: 4, q: "The first binary programmable computer based on the Von Neumann architecture was:", options: ["Abacus", "Analytical Engine", "ENIAC", "Pascaline"], answer: 2 },
+                { id: 5, q: "Which of the following software allows the public to freely use its source code to improve it?", options: ["Proprietary Software", "System Software", "Freeware", "Free and Open Source Software (FOSS)"], answer: 3 },
+                { id: 6, q: "1 Zettabyte (ZB) is equal to:", options: ["1024 EB (Exabytes)", "1024 PB (Petabytes)", "1024 TB (Terabytes)", "1024 YB (Yottabytes)"], answer: 0 },
+                { id: 7, q: "Which of the following performs all the arithmetic and logic operations in a computer?", options: ["Control Unit (CU)", "Arithmetic Logic Unit (ALU)", "Registers", "Read Only Memory (ROM)"], answer: 1 },
+                { id: 8, q: "According to the Von Neumann architecture, which of the following is NOT a core component of a computer system?", options: ["Central Processing Unit", "Memory", "Internet Connection", "Input/Output Devices"], answer: 2 },
+                { id: 9, q: "Who designed the Tabulating Machine, considered the first step towards programming?", options: ["Charles Babbage", "Blaise Pascal", "Herman Hollerith", "Alan Turing"], answer: 2 },
+                { id: 10, q: "What is the fundamental purpose of the Pascaline invented by Blaise Pascal?", options: ["Store instructions on punched cards", "Perform addition and subtraction", "Translate programming languages", "Display graphical outputs"], answer: 1 },
+                { id: 11, q: "The CPU physically comprises Integrated Circuits (ICs), which are made of:", options: ["Magnetic material", "Semiconductor materials", "Optical materials", "Insulators"], answer: 1 },
+                { id: 12, q: "1 Megabyte (MB) is equivalent to:", options: ["1024 Bytes", "1024 Kilobytes (KB)", "1024 Gigabytes (GB)", "1000 Kilobytes (KB)"], answer: 1 },
+                { id: 13, q: "A very high-speed memory placed between the CPU and the primary memory is called:", options: ["RAM", "SSD", "Register", "Cache"], answer: 3 },
+                { id: 14, q: "Which of the following is an example of an output device?", options: ["Scanner", "Mouse", "Projector", "Keyboard"], answer: 2 },
+                { id: 15, q: "A software that acts as a mediator between the operating system and an attached hardware device is called a:", options: ["System Utility", "Device Driver", "Compiler", "Operating System"], answer: 1 },
+                { id: 16, q: "Which of the following is NOT an Operating System?", options: ["Ubuntu", "Windows 10", "Text Editor", "iOS"], answer: 2 },
+                { id: 17, q: "The mechanical computing device called the 'Analytical Engine' was invented by:", options: ["John Von Neumann", "Gordon Moore", "Charles Babbage", "Herman Hollerith"], answer: 2 },
+                { id: 18, q: "The concept of the 'stored program computer' was introduced by:", options: ["John Von Neumann", "Alan Turing", "Blaise Pascal", "Gordon Moore"], answer: 0 },
+                { id: 19, q: "Which of the following is an example of a system utility?", options: ["Anti-virus software", "Python compiler", "Mozilla Firefox", "LibreOffice Writer"], answer: 0 },
+                { id: 20, q: "A physical printed document or image is referred to as a:", options: ["Softcopy", "Hardcopy", "Executable", "Source code"], answer: 1 }
+            ],
+            fib: [
+                { id: 21, q: "The CPU stores data and instructions temporarily in its local memory called ___________.", answer: "registers" },
+                { id: 22, q: "A ___________ printer is used to build a physical replica of a digital 3D design.", answer: "3D" },
+                { id: 23, q: "___________ memory is a very high-speed memory placed between the CPU and the primary memory to speed up processing.", answer: "Cache" },
+                { id: 24, q: "Software that acts as a mediator between the operating system and an attached hardware device is called a ___________.", answer: "device driver" },
+                { id: 25, q: "An operating system is an example of ___________ software.", answer: "system" },
+                { id: 26, q: "A two-nibble word, i.e., an 8-bit word, is called a ___________.", answer: "byte" },
+                { id: 27, q: "The software used for maintenance and configuration of the computer system, such as a disk defragmentation tool, is called a ___________.", answer: "system utility" },
+                { id: 28, q: "A computer uses ___________ numbers to store and process data.", answer: "binary" },
+                { id: 29, q: "The first mechanical calculator capable of doing addition and subtraction was known as ___________.", answer: "Pascaline" },
+                { id: 30, q: "___________ Law predicted exponential growth in the number of transistors on a single chip.", answer: "Moore's" },
+                { id: 31, q: "___________ is a non-volatile main memory used to store the boot loader.", answer: "ROM" },
+                { id: 32, q: "The process of retrieving deleted, corrupted, or lost data is called ___________.", answer: "data recovery" },
+                { id: 33, q: "A document or image stored digitally on a hard disk is referred to as a ___________.", answer: "softcopy" },
+                { id: 34, q: "Software whose source code is freely accessible for modification is known as ___________.", answer: "FOSS" },
+                { id: 35, q: "In the evolution of computers, vacuum tubes were eventually replaced by ___________.", answer: "transistors" },
+                { id: 36, q: "A ___________ is a piece of stiff paper that stores digital data in the form of holes.", answer: "punched card" },
+                { id: 37, q: "Microsoft Windows and Tally are examples of ___________ software.", answer: "proprietary" },
+                { id: 38, q: "The brain of the computer, which carries out the actual processing, is the ___________.", answer: "CPU" },
+                { id: 39, q: "Data entered through input devices is temporarily stored in the ___________ (also called main memory).", answer: "RAM" },
+                { id: 40, q: "The ___________ performs all the arithmetic and logic operations as per the given instructions.", answer: "ALU" }
+            ],
+            subjective: [
+                // Very Short (41-60)
+                { id: 41, type: "Very Short", q: "What is the primary function of the Control Unit (CU)?", answer: "Controls sequential instruction execution, interprets instructions, and guides data flow." },
+                { id: 42, type: "Very Short", q: "Give an example of an input device specifically designed to help the visually impaired.", answer: "Braille keyboard." },
+                { id: 43, type: "Very Short", q: "What was Moore's Law regarding microchips?", answer: "Predicted that the number of transistors on a chip would double every two years while costs would be halved." },
+                { id: 44, type: "Very Short", q: "Name any two commonly used secondary storage devices.", answer: "Hard Disk Drive (HDD), Solid State Drive (SSD), Pen Drive, CD/DVD." },
+                { id: 45, type: "Very Short", q: "Give one example of Customised Application Software.", answer: "School management software, accounting software." },
+                { id: 46, type: "Very Short", q: "What does the term 'freeware' mean? Give one example.", answer: "Software that is freely available for use, but its source code is not available (e.g., Skype)." },
+                { id: 47, type: "Very Short", q: "Identify the category (system, application, programming tool) of a 'Compiler'.", answer: "Programming tool." },
+                { id: 48, type: "Very Short", q: "Which type of memory is used to store the startup program (boot loader)?", answer: "Read Only Memory (ROM)." },
+                { id: 49, type: "Very Short", q: "What is the full form of ENIAC?", answer: "Electronic Numerical Integrator And Computer." },
+                { id: 50, type: "Very Short", q: "Who is considered the inventor of the Analytical Engine?", answer: "Charles Babbage." },
+                { id: 51, type: "Very Short", q: "Who designed the Tabulating Machine?", answer: "Herman Hollerith." },
+                { id: 52, type: "Very Short", q: "What is the smallest unit of computer memory called?", answer: "Bit." },
+                { id: 53, type: "Very Short", q: "How many Terabytes (TB) are there in 1 Petabyte (PB)?", answer: "1024 TB." },
+                { id: 54, type: "Very Short", q: "Name a secondary storage device that has no moving parts and supports very fast data transfer speeds.", answer: "Solid State Drive (SSD) or Pen Drive." },
+                { id: 55, type: "Very Short", q: "Give one example of a system utility.", answer: "Disk defragmentation tool, anti-virus, disk cleaner, etc." },
+                { id: 56, type: "Very Short", q: "What does VLSI stand for in the context of computer evolution?", answer: "Very Large Scale Integration." },
+                { id: 57, type: "Very Short", q: "Name a popular web browser mentioned in the text as a general-purpose software.", answer: "Mozilla Firefox." },
+                { id: 58, type: "Very Short", q: "What is the main characteristic of secondary memory compared to RAM?", answer: "It is non-volatile and has a larger storage capacity than RAM." },
+                { id: 59, type: "Very Short", q: "What do you mean by a 'hardcopy'?", answer: "A printed document or image on paper." },
+                { id: 60, type: "Very Short", q: "Who introduced the concept of the stored program computer?", answer: "John Von Neumann." },
+                
+                // Short (61-80)
+                { id: 61, type: "Short", q: "Differentiate between proprietary software and freeware software. Name two software of each type.", answer: "Proprietary software must be purchased from a vendor who holds the copyright, and its source code is hidden (e.g., Microsoft Windows, Tally). Freeware is available freely without cost, but its source code is NOT accessible for modification (e.g., Skype, Adobe Reader)." },
+                { id: 62, type: "Short", q: "Draw a block diagram for categorization of software.", answer: "Software is broadly categorized into three main types:\n1. System Software (includes Operating Systems, System Utilities, Device Drivers)\n2. Programming Tools\n3. Application Software (includes General Purpose and Customised software).\n(Refer to Figure 1.9 in the NCERT book for the visual block diagram)." },
+                { id: 63, type: "Short", q: "What Is programming? Write the various modes of python interpreter.", answer: "Programming is the process of writing specific instructions (code) that a computer executes to perform tasks. The Python interpreter operates in two modes:\n1. Interactive Mode: Executes code line-by-line providing immediate output.\n2. Script Mode: Executes a saved file (.py) containing multiple lines of code." },
+                { id: 64, type: "Short", q: "What are the python keywords?", answer: "Keywords are reserved words in Python that have a special meaning and specific purpose to the interpreter. They cannot be used as ordinary identifiers (like variable names). Examples include: if, else, for, while, def, import, True, False, etc." },
+                { id: 65, type: "Short", q: "Which type of language python is – Interpreted based or Compiler based?", answer: "Python is primarily an Interpreted language. An interpreter processes the Python script line by line, translating and executing it simultaneously, unlike a compiler which translates the entire code before execution." },
+                { id: 66, type: "Short", q: "What is comments in any programming language? Which symbol is used for comments in python programming.", answer: "Comments are non-executable statements in a program used to add notes or explanations for humans reading the code. The interpreter ignores them. In Python, the hash symbol (#) is used for single-line comments." },
+                { id: 67, type: "Short", q: "Write a simple python program to find the sum of given two numbers.", answer: "num1 = int(input('Enter first number: '))\nnum2 = int(input('Enter second number: '))\ntotal = num1 + num2\nprint('The sum is:', total)" },
+                { id: 68, type: "Short", q: "Define a computer system. What are its primary components?", answer: "An electronic device programmed to accept data, process it, and generate results. Components include the CPU, Memory, I/O devices, and Storage devices." },
+                { id: 69, type: "Short", q: "Differentiate between computer hardware and software.", answer: "Hardware refers to the physical, tangible components of the computer system. Software is a set of instructions that makes the hardware functional." },
+                { id: 70, type: "Short", q: "What is an Operating System? Give two examples.", answer: "It is system software that operates the computer, manages hardware/software, and provides an interface. Examples: Windows, Ubuntu, Android." },
+                { id: 71, type: "Short", q: "What is a device driver? Why is it needed?", answer: "A software mediator that ensures proper functioning of a hardware device by hiding operation details from the OS. Needed because the OS cannot manage all diverse peripherals natively." },
+                { id: 72, type: "Short", q: "Explain Moore's Law and its significance in computer evolution.", answer: "Proposed by Gordon Moore, it predicted an exponential increase in transistors on a single chip over time, doubling every two years while costs halve, driving miniaturization." },
+                { id: 73, type: "Short", q: "What is Cache Memory? Why is it specifically used?", answer: "A very high-speed memory placed between the CPU and primary memory to store frequently accessed data, speeding up overall CPU operations." },
+                { id: 74, type: "Short", q: "What is a system utility? Give two examples.", answer: "Software used for maintenance and configuration of a computer. Examples: Disk defragmentation tool, Anti-virus software." },
+                { id: 75, type: "Short", q: "Convert 3.5 Gigabytes (GB) into Megabytes (MB).", answer: "3.5 GB = 3.5 x 1024 = 3584 MB." },
+                { id: 76, type: "Short", q: "What is freeware? How does it differ from FOSS?", answer: "Freeware is free to use but source code is closed. FOSS (Free and Open Source Software) is free to use AND provides access to modify its source code." },
+                { id: 77, type: "Short", q: "Explain the function of Registers in the CPU.", answer: "Registers are the CPU's local, ultra-fast memory used for temporarily storing active data, instructions, or intermediate results during immediate processing." },
+                { id: 78, type: "Short", q: "Name three types of commonly used printers.", answer: "Inkjet, Laserjet, and Dot Matrix printers." },
+                { id: 79, type: "Short", q: "How is a braille display monitor useful?", answer: "It helps visually challenged individuals understand the textual output generated by computers in a tactile format." },
+                { id: 80, type: "Short", q: "Why has data storage become a challenging task nowadays, and how are large organizations solving it?", answer: "Data is being produced at a very high rate. Organizations use dedicated, large-scale computers with fast storage called data servers to handle and process this data." },
+                // Long (81-100)
+                { id: 81, type: "Long", q: "Draw the block diagram of a computer system. Explain the role of the Central Processing Unit (CPU) and its internal components.", answer: "The CPU is the brain of the computer carrying out actual processing. Internal components:\n1. ALU (Arithmetic Logic Unit): Performs mathematical calculations and logical comparisons.\n2. CU (Control Unit): Controls sequential instruction execution and guides data flow.\n3. Registers: Very fast local storage for immediate data/instructions." },
+                { id: 82, type: "Long", q: "What is software? Briefly explain the three broad categories of software with the help of a flow chart/categorisation diagram.", answer: "Software is a set of instructions that makes hardware functional. \n1. System Software: Operates the core computer (e.g., OS, utilities, device drivers).\n2. Application Software: Helps end-users perform specific tasks (e.g., general purpose like word processors, or customised like billing systems).\n3. Programming Tools: Used by developers to write and translate other software." },
+                { id: 83, type: "Long", q: "Trace the evolution of computer hardware by explaining the significance of any four key inventions (e.g., Abacus, Analytical Engine, Turing Machine, Integrated Circuits).", answer: "1. Abacus: The first mechanical device for simple calculations.\n2. Analytical Engine: Charles Babbage's mechanical processor forming the basis of modern architecture.\n3. Transistors: Replaced bulky, hot vacuum tubes, making computers smaller and reliable.\n4. Integrated Circuits (ICs): Packed millions of transistors onto single silicon chips (VLSI), drastically reducing size and cost while increasing speed." },
+                { id: 84, type: "Long", q: "Briefly explain the memory hierarchy of a computer. Differentiate between primary and secondary memory.", answer: "Hierarchy: CPU Registers -> Cache -> Primary Memory -> Secondary Memory.\nPrimary Memory (RAM/ROM) is directly accessible by the CPU, extremely fast, usually volatile (RAM), and has limited capacity.\nSecondary Memory (HDD/SSD/Flash) cannot be directly accessed by the CPU, is non-volatile, slower, cheaper, and has massive storage capacity." },
+                { id: 85, type: "Long", q: "Differentiate between Proprietary software, Freeware, and Free and Open Source Software (FOSS). Give at least one example of each.", answer: "1. Proprietary: Purchased from a vendor who holds the copyright; source code is hidden. (e.g., MS Windows, Tally).\n2. Freeware: Freely available to use without payment, but source code is NOT available for modification. (e.g., Skype, Adobe Reader).\n3. FOSS: Freely available to use AND the source code is open for anyone to modify/improve. (e.g., Ubuntu, Python)." },
+                { id: 86, type: "Long", q: "Discuss the Von Neumann architecture with the help of a diagram explanation. What components does it consist of?", answer: "Introduced by John Von Neumann, it established the 'stored program' concept where data and programs reside in the same memory. It consists of a Central Processing Unit (CPU) containing an ALU and CU, main Memory for storage, Input/Output devices, and communication channels for data flow." },
+                { id: 87, type: "Long", q: "Explain Data Capturing, Data Storage, and Data Retrieval in detail.", answer: "1. Data Capturing: The process of gathering data from various sources into digital form using devices like keyboards or barcode scanners.\n2. Data Storage: Saving captured data securely onto secondary storage devices (SSDs/HDDs) or data servers for future use.\n3. Data Retrieval: Fetching saved data quickly from storage into main memory for processing." },
+                { id: 88, type: "Long", q: "Elaborate on the role of the CPU. Explain the specific functions of the Arithmetic Logic Unit (ALU), Control Unit (CU), and Registers.", answer: "The CPU acts as the electronic circuitry fetching, interpreting, and executing instructions. \n- ALU executes all mathematical operations (addition, subtraction) and logical decisions (comparisons).\n- CU acts as the manager, directing the sequence of execution and data flow between memory and the ALU.\n- Registers provide the CPU with ultra-fast, local memory to hold active variables." },
+                { id: 89, type: "Long", q: "Discuss data deletion and the process of data recovery. Why must we use proper tools to shred data before disposing of an old storage device?", answer: "Normal deletion only marks the memory space as 'empty' without actually erasing the underlying bit data. Data recovery utilizes tools to restore these bits if they haven't been overwritten. If old drives are discarded without proper digital 'shredding' (overwriting all bits permanently), unauthorized users can recover sensitive personal or corporate information." },
+                { id: 90, type: "Long", q: "Write a detailed note on System Software and its various sub-categories (Operating Systems, System Utilities, Device Drivers).", answer: "System Software interacts directly with hardware to provide core functionality.\n- Operating Systems (OS): The foundation manager (Windows/Ubuntu) that controls hardware resources and hosts applications.\n- System Utilities: Tools for maintenance and optimization, like anti-virus or disk defragmenters.\n- Device Drivers: Specialized mediator programs that translate OS commands into specific hardware instructions for peripherals." },
+                { id: 91, type: "Long", q: "Explain Application Software and clearly differentiate between General Purpose application software and Customised application software with examples.", answer: "Application software sits on top of System software to perform end-user tasks.\n- General Purpose: Mass-market, ready-made software built for generic needs across many users. Examples: MS Word, Mozilla Firefox, Adobe Photoshop.\n- Customised: Tailor-made software built exclusively for the specific workflows of a single organization or individual. Examples: A school's attendance portal, a hotel's proprietary billing system." },
+                { id: 92, type: "Long", q: "Define a 'computing device' and discuss its transition from simple mechanical devices like the Abacus to modern smart appliances and wearables.", answer: "A computing device processes input data via instructions to generate output. The transition began with mechanical calculators (Abacus, Pascaline, Analytical Engine), moved to massive electronic machines (ENIAC with vacuum tubes), then miniaturized via microprocessors into Personal Computers (PCs). Today, it encompasses portable laptops, smartphones, and even IoT-connected smart appliances and wearables like smartwatches." },
+                { id: 93, type: "Long", q: "'A computer cannot function without system software, but it can work without application software.' Justify this statement by explaining the dependency between hardware, system software, and application software.", answer: "Computer hardware is useless without instructions. System software (like the OS) provides these foundational instructions to boot the system, manage memory, and operate peripherals. Without it, the machine is dead. Application software runs ON TOP of the OS to do user-specific tasks (like typing a document). A computer can boot up and run perfectly fine without MS Word installed, but it cannot boot without an OS." },
+                { id: 94, type: "Long", q: "What are storage devices? Explain any four secondary storage devices used in modern computing, highlighting the transition from HDDs to SSDs.", answer: "Storage devices are non-volatile hardware used to retain data permanently. \n1. HDD (Hard Disk Drive): Traditional magnetic platters; moving parts make them slower.\n2. CD/DVD: Optical storage read by lasers.\n3. Flash/Pen Drive: Portable, small-sized USB storage.\n4. SSD (Solid State Drive): Modern storage using flash memory with NO moving parts, offering a massive transition to vastly faster data transfer speeds compared to HDDs." },
+                { id: 95, type: "Long", q: "Discuss the significance of the invention of Transistors and Integrated Circuits (ICs) in the evolution of computers.", answer: "Before transistors, computers used vacuum tubes which were massive, hot, and prone to blowing out. Transistors replaced them, functioning as reliable, solid-state switches. Integrated Circuits (ICs) took this further by etching millions of microscopic transistors onto a single silicon chip (VLSI). This miniaturization drastically reduced computer size and cost while exponentially increasing processing power." },
+                { id: 96, type: "Long", q: "Explain the various measurement units of digital data, outlining the hierarchy from a bit up to a Yottabyte.", answer: "Data is processed in Binary Digits (Bits: 0 or 1). \n4 bits = 1 Nibble. \n8 bits = 1 Byte.\nThe hierarchy scales by factors of 1024:\n1024 Bytes = 1 Kilobyte (KB)\n1024 KB = 1 Megabyte (MB)\n1024 MB = 1 Gigabyte (GB)\n1024 GB = 1 Terabyte (TB)\n1024 TB = 1 Petabyte (PB)\nThis continues up through Exabytes (EB), Zettabytes (ZB), and finally Yottabytes (YB)." },
+                { id: 97, type: "Long", q: "Describe the importance of device drivers. Why isn't the operating system designed to manage all existing and new peripherals directly?", answer: "Device drivers are translator programs. Every hardware peripheral (printers, graphics cards) has unique characteristics and circuitry. It is impossible for an OS to natively understand the specific hardware-level commands for millions of current and future devices. The driver acts as the interface, taking standard OS commands and translating them into the specific electrical signals required by that exact device." },
+                { id: 98, type: "Long", q: "'Human beings memorize many things... similarly, computers have two types of memories.' Analyze this statement by explaining the primary and secondary memories of a computer.", answer: "Just as humans use short-term memory for active tasks and write things down for long-term recall, computers use primary memory (RAM) for active, rapid processing. RAM is volatile, like losing a thought when distracted. To 'write things down,' computers use secondary memory (Hard Disks/SSDs), which is non-volatile and retains the information permanently for future retrieval, even when the power is turned off." },
+                { id: 99, type: "Long", q: "What is an input device? Discuss traditional input devices versus modern advancements in input techniques (like voice search).", answer: "Input devices convert external data into a digital form the computer can process. Traditionally, this was done via physical tactile methods like Keyboards and Mice, which translated keypresses or motion into binary. Modern advancements use AI and sensors to capture more natural data forms, such as touch screens capturing gestures, or microphones utilizing speech-to-text to capture spoken Voice Search queries dynamically." },
+                { id: 100, type: "Long", q: "Assume you are setting up a data server for a large organization. What factors regarding hardware (storage size, access time) and data security (deletion, recovery) must you consider?", answer: "For hardware, the server must have massive storage capacity (Terabytes/Petabytes) and utilize Solid State Drives (SSDs) rather than HDDs to minimize data access time and speed up retrieval. For security, since data is sensitive, you must implement strong access limits and encryption. For hardware disposal, standard deletion is insufficient (as data can be recovered); you must use specialized data shredding tools to permanently overwrite bits before disposing of the drives." }
+            ]
+        };
+
+        // --- STATE ---
+        const state = {
+            activeTab: 'mcq',
+            mcqAnswers: {},       // { id: optionIndex }
+            fibInputs: {},        // { id: "user text" }
+            fibResults: {},       // { id: boolean }
+            subjectiveRevealed: {} // { id: boolean }
+        };
+
+        const tabs = [
+            { id: 'mcq', label: 'MCQs (20)', icon: 'help-circle' },
+            { id: 'fib', label: 'Fill in the Blanks (20)', icon: 'edit-3' },
+            { id: 'sub', label: 'Subjective (60)', icon: 'book-open' },
+        ];
+
+        // --- CONTROLLERS ---
+        window.setActiveTab = function(tabId) {
+            state.activeTab = tabId;
+            renderTabs();
+            renderContent();
+            
+            // Trigger animation
+            const contentArea = document.getElementById('content-area');
+            contentArea.classList.remove('fade-in');
+            void contentArea.offsetWidth; // trigger reflow
+            contentArea.classList.add('fade-in');
+        };
+
+        window.handleMCQSelect = function(qId, optionIndex) {
+            if (state.mcqAnswers[qId] !== undefined) return;
+            state.mcqAnswers[qId] = optionIndex;
+            renderContent();
+        };
+
+        window.handleFibInput = function(qId, value) {
+            state.fibInputs[qId] = value;
+            if (state.fibResults[qId] !== undefined) {
+                state.fibResults[qId] = undefined; // reset validation on type
+            }
+        };
+
+        window.checkFibAnswer = function(qId, correctAnswer) {
+            const inputEl = document.getElementById('fib-input-' + qId);
+            const userAns = (inputEl.value || "").trim().toLowerCase();
+            const correctAns = correctAnswer.trim().toLowerCase();
+            state.fibInputs[qId] = inputEl.value; // ensure state has latest
+            state.fibResults[qId] = (userAns === correctAns);
+            renderContent();
+        };
+
+        window.revealFibAnswer = function(qId, correctAnswer) {
+            state.fibInputs[qId] = correctAnswer;
+            state.fibResults[qId] = true;
+            renderContent();
+        };
+
+        window.toggleSubjective = function(qId) {
+            state.subjectiveRevealed[qId] = !state.subjectiveRevealed[qId];
+            renderContent();
+        };
+
+        // --- RENDERERS ---
+        function renderTabs() {
+            const container = document.getElementById('tabs-container');
+            let html = '';
+            tabs.forEach(tab => {
+                const isActive = state.activeTab === tab.id;
+                const activeClasses = isActive 
+                    ? 'bg-white text-blue-700 shadow-sm border border-gray-200 scale-[1.02]' 
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200/80';
+                
+                html += `
+                    <button onclick="setActiveTab('${tab.id}')" class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-sm font-medium transition-all ${activeClasses}">
+                        <i data-lucide="${tab.icon}" class="w-4 h-4"></i>
+                        ${tab.label}
+                    </button>
+                `;
+            });
+            container.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        function renderContent() {
+            const container = document.getElementById('content-area');
+            if (state.activeTab === 'mcq') {
+                container.innerHTML = renderMCQs();
+            } else if (state.activeTab === 'fib') {
+                container.innerHTML = renderFIBs();
+            } else if (state.activeTab === 'sub') {
+                container.innerHTML = renderSubjectives();
+            }
+            lucide.createIcons();
+        }
+
+        function renderMCQs() {
+            let score = Object.keys(state.mcqAnswers).reduce((acc, qId) => {
+                const q = questionsData.mcqs.find(item => item.id == qId);
+                return acc + (state.mcqAnswers[qId] === q.answer ? 1 : 0);
+            }, 0);
+
+            let html = `
+                <div class="space-y-6">
+                    <div class="bg-blue-50 text-blue-800 p-4 rounded-lg flex justify-between items-center shadow-sm border border-blue-100">
+                        <h3 class="text-lg font-semibold flex items-center gap-2">
+                            <i data-lucide="help-circle" class="w-5 h-5"></i> Multiple Choice Questions (1-20)
+                        </h3>
+                        <div class="font-bold bg-white px-3 py-1 rounded-full text-blue-600 shadow-sm">
+                            Score: ${score} / ${questionsData.mcqs.length}
+                        </div>
+                    </div>
+            `;
+
+            questionsData.mcqs.forEach(q => {
+                const isAnswered = state.mcqAnswers[q.id] !== undefined;
+                
+                html += `
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 transition-all hover:shadow-md">
+                        <h4 class="font-medium text-gray-800 mb-4 flex gap-2">
+                            <span class="text-blue-500 font-bold shrink-0">${q.id}.</span> 
+                            <span>${q.q}</span>
+                        </h4>
+                        <div class="space-y-2 pl-6">
+                `;
+
+                q.options.forEach((opt, oIdx) => {
+                    let btnStyle = "bg-gray-50 border-gray-200 text-gray-700 hover:bg-blue-50 hover:border-blue-300 cursor-pointer";
+                    let iconHtml = '';
+
+                    if (isAnswered) {
+                        btnStyle = "bg-gray-50 border-gray-200 text-gray-400 opacity-60 cursor-default"; // Default inactive
+                        if (oIdx === q.answer) {
+                            btnStyle = "bg-green-100 border-green-500 text-green-800 font-medium cursor-default";
+                            iconHtml = `<i data-lucide="check-circle-2" class="w-4 h-4 text-green-600"></i>`;
+                        } else if (state.mcqAnswers[q.id] === oIdx) {
+                            btnStyle = "bg-red-100 border-red-500 text-red-800 cursor-default";
+                            iconHtml = `<i data-lucide="x-circle" class="w-4 h-4 text-red-600"></i>`;
+                        }
+                    }
+
+                    html += `
+                        <button ${isAnswered ? 'disabled' : ''} onclick="handleMCQSelect(${q.id}, ${oIdx})" class="w-full text-left p-3 rounded-lg border transition-colors flex items-center justify-between ${btnStyle}">
+                            <span>${opt}</span>
+                            ${iconHtml}
+                        </button>
+                    `;
+                });
+
+                html += `</div></div>`;
+            });
+
+            html += `</div>`;
+            return html;
+        }
+
+        function renderFIBs() {
+            let html = `
+                <div class="space-y-6">
+                    <div class="bg-emerald-50 text-emerald-800 p-4 rounded-lg shadow-sm border border-emerald-100">
+                        <h3 class="text-lg font-semibold flex items-center gap-2">
+                            <i data-lucide="edit-3" class="w-5 h-5"></i> Fill in the Blanks Practice (21-40)
+                        </h3>
+                        <p class="text-sm mt-1 opacity-80">Type your answer and click Check, or use Reveal if you're stuck.</p>
+                    </div>
+            `;
+
+            questionsData.fib.forEach(q => {
+                const parts = q.q.split("___________");
+                const isChecked = state.fibResults[q.id] !== undefined;
+                const isCorrect = state.fibResults[q.id] === true;
+                const inputValue = state.fibInputs[q.id] || "";
+                
+                let inputStyle = "border-gray-300";
+                let feedbackHtml = '';
+
+                if (isChecked) {
+                    if (isCorrect) {
+                        inputStyle = "border-green-500 text-green-700 bg-green-50";
+                        feedbackHtml = `<span class="text-green-600 flex items-center gap-1 text-sm font-medium"><i data-lucide="check-circle-2" class="w-4 h-4"></i> Correct</span>`;
+                    } else {
+                        inputStyle = "border-red-500 text-red-700 bg-red-50";
+                        feedbackHtml = `<span class="text-red-600 flex items-center gap-1 text-sm font-medium"><i data-lucide="x-circle" class="w-4 h-4"></i> Try again</span>`;
+                    }
+                }
+
+                // Important: Need to escape quotes in strings passed to inline functions
+                const escapedAnswer = q.answer.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+                html += `
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                        <div class="flex gap-2">
+                            <span class="text-emerald-500 font-bold shrink-0">${q.id}.</span>
+                            <div class="font-medium text-gray-800 leading-relaxed">
+                                ${parts[0]}
+                                <input 
+                                    id="fib-input-${q.id}"
+                                    type="text" 
+                                    value="${inputValue.replace(/"/g, '&quot;')}"
+                                    oninput="handleFibInput(${q.id}, this.value)"
+                                    class="inline-block mx-2 border-b-2 bg-gray-50 outline-none px-2 py-1 min-w-[140px] text-center font-semibold focus:border-emerald-500 transition-colors ${inputStyle}"
+                                    placeholder="..."
+                                />
+                                ${parts[1]}
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 flex items-center gap-3 pl-8">
+                            <button onclick="checkFibAnswer(${q.id}, '${escapedAnswer}')" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors">
+                                Check Answer
+                            </button>
+                            <button onclick="revealFibAnswer(${q.id}, '${escapedAnswer}')" class="px-4 py-2 bg-gray-100 text-gray-600 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors border border-gray-200">
+                                Reveal
+                            </button>
+                            ${isChecked ? `<div class="ml-2">${feedbackHtml}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+            return html;
+        }
+
+        function renderSubjectives() {
+            let html = `
+                <div class="space-y-6">
+                    <div class="bg-purple-50 text-purple-800 p-4 rounded-lg shadow-sm border border-purple-100 flex flex-col gap-1">
+                        <h3 class="text-lg font-semibold flex items-center gap-2">
+                            <i data-lucide="book-open" class="w-5 h-5"></i> Subjective Questions (41-100)
+                        </h3>
+                        <p class="text-sm opacity-80">Test your knowledge mentally, then reveal the answer to verify.</p>
+                    </div>
+            `;
+
+            questionsData.subjective.forEach(q => {
+                const isRevealed = !!state.subjectiveRevealed[q.id];
+
+                html += `
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow overflow-hidden">
+                        <div class="flex items-start justify-between gap-4">
+                            <div class="flex gap-2">
+                                <span class="text-purple-500 font-bold shrink-0">${q.id}.</span>
+                                <div>
+                                    <span class="text-[10px] font-bold text-purple-600 bg-purple-100 px-2 py-0.5 rounded uppercase tracking-wider mb-2 inline-block">
+                                        ${q.type}
+                                    </span>
+                                    <h4 class="font-medium text-gray-800 text-lg leading-snug">${q.q}</h4>
+                                </div>
+                            </div>
+                            <button onclick="toggleSubjective(${q.id})" class="flex items-center gap-2 px-3 py-1.5 bg-purple-100 text-purple-700 hover:bg-purple-200 rounded-md transition-colors whitespace-nowrap text-sm font-medium shrink-0">
+                                ${isRevealed 
+                                    ? `<i data-lucide="eye-off" class="w-4 h-4"></i> Hide Answer` 
+                                    : `<i data-lucide="eye" class="w-4 h-4"></i> Show Answer`
+                                }
+                            </button>
+                        </div>
+                        
+                        ${isRevealed ? `
+                            <div class="mt-4 pt-4 border-t border-purple-100 ml-6 fade-in">
+                                <div class="bg-purple-50/50 p-4 rounded-lg border border-purple-100/50 text-gray-700 whitespace-pre-wrap leading-relaxed">
+                                    <span class="font-semibold text-purple-800 block mb-1">Answer:</span>\n${q.answer}
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+            return html;
+        }
+
+        // --- INIT ---
+        renderTabs();
+        renderContent();
+
+    </script>
+</body>
+</html>
